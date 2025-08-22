@@ -1,0 +1,13 @@
+-- Create database file locally: database.db
+-- Then run this SQL to initialize the table
+
+CREATE TABLE IF NOT EXISTS reports (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT NOT NULL,
+    userid TEXT NOT NULL,
+    reason TEXT NOT NULL,
+    duration TEXT NOT NULL,
+    proof TEXT NOT NULL,
+    reporter TEXT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
