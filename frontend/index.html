@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Roblox Suspension Reports</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-6">
+  <div class="max-w-3xl mx-auto">
+    <h1 class="text-3xl font-bold text-center mb-6">Roblox Suspension Reports</h1>
+
+    <!-- Report Form -->
+    <form id="reportForm" class="bg-white p-6 rounded shadow-md space-y-4">
+      <input type="text" id="username" placeholder="Roblox Username" class="w-full p-2 border rounded" required>
+      <input type="text" id="userid" placeholder="Roblox User ID" class="w-full p-2 border rounded" required>
+      <input type="text" id="reason" placeholder="Reason for Suspension" class="w-full p-2 border rounded" required>
+      <input type="text" id="duration" placeholder="Duration (e.g., 3 days, permanent)" class="w-full p-2 border rounded" required>
+      <input type="text" id="proof" placeholder="Proof Link (Imgur, Gyazo, etc.)" class="w-full p-2 border rounded" required>
+      <input type="text" id="reporter" placeholder="Your Name/Moderator Tag" class="w-full p-2 border rounded" required>
+      <button type="submit" class="w-full bg-red-500 text-white py-2 rounded hover:bg-red-600">Submit Report</button>
+    </form>
+
+    <!-- Reports Table -->
+    <h2 class="text-2xl font-bold mt-10 mb-4">Submitted Reports</h2>
+    <div class="overflow-x-auto">
+      <table class="w-full table-auto bg-white rounded shadow-md">
+        <thead>
+          <tr class="bg-gray-200">
+            <th class="px-4 py-2">Case ID</th>
+            <th class="px-4 py-2">Username</th>
+            <th class="px-4 py-2">Reason</th>
+            <th class="px-4 py-2">Duration</th>
+            <th class="px-4 py-2">Proof</th>
+            <th class="px-4 py-2">Reporter</th>
+          </tr>
+        </thead>
+        <tbody id="reportsTable" class="text-center">
+          <!-- Rows added dynamically -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById("reportForm");
+    const reportsTable = document.getElementById("reportsTable");
+
+    async function loadReports() {
+      const res = await fetch("/api/reports");
+      const reports = await res.json();
+      reportsTable.innerHTML = "";
+      reports.forEach(report => {
+        reportsTable.innerHTML += `
+          <tr>
+            <td class="border px-2 py-1">${report.id}</td>
+            <td class="border px-2 py-1">${report.username}</td>
+            <td class="border px-2 py-1">${report.reason}</td>
+            <td class="border px-2 py-1">${report.duration}</td>
+            <td class="border px-2 py-1"><a href="${report.proof}" target="_blank" class="text-blue-600 underline">View</a></td>
+            <td class="border px-2 py-1">${report.reporter}</td>
+          </tr>
+        `;
+      });
+    }
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const data = {
+        username: form.username.value,
+        userid: form.userid.value,
+        reason: form.reason.value,
+        duration: form.duration.value,
+        proof: form.proof.value,
+        reporter: form.reporter.value
+      };
+
+      const res = await fetch("/api/report", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
+
+      const result = await res.json();
+      alert(result.message + " | Case #" + result.caseId);
+      form.reset();
+      loadReports();
+    });
+
+    loadReports();
+  </script>
+</body>
+</html>
