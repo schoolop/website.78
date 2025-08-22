@@ -1,0 +1,29 @@
+/* style.css */
+
+/* Make table rows hover-highlight */
+table tbody tr:hover {
+    background-color: #fef3f3;
+}
+
+/* Add custom button hover */
+button:hover {
+    transform: scale(1.02);
+    transition: 0.2s ease-in-out;
+}
+
+/* Make form inputs focus nicely */
+input:focus {
+    outline: none;
+    border-color: #f87171; /* Tailwind red-400 */
+    box-shadow: 0 0 0 2px rgba(248, 113, 113, 0.3);
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+    table {
+        font-size: 0.85rem;
+    }
+    h1 {
+        font-size: 1.8rem;
+    }
+}
